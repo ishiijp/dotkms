@@ -1,6 +1,6 @@
 {
   "name": "gcloud-kms-cli",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A tiny CLI tool for Google Cloud KMS",
   "dependencies": {
     "commander": "^2.19.0",
