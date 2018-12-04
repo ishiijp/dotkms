@@ -4,6 +4,7 @@
   "description": "A tiny CLI tool for Google Cloud KMS",
   "dependencies": {
     "commander": "^2.19.0",
+    "dotenv": "^6.1.0",
     "lodash.camelcase": "^4.3.0"
   },
   "bin": {

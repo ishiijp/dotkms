@@ -10,6 +10,7 @@ try {
 
 const program = require('commander')
 const pkg = require('./package.json')
+const dotenv = require('dotenv')
 const camelCase = require('lodash.camelcase')
 
 program.version(pkg.version, '-v, --version')
@@ -17,6 +18,7 @@ function cryptCommand(command) {
   return program
     .command(command)
     .option('--prefix <prefix>', 'Prefix of environment variables.')
+    .option('-n, --env <file>', 'Path of env file.')
     .option('-g, --project <project>', 'Google Cloud project to use. GCLOUD_KMS_PROJECT')
     .option('-l, --location <location>', 'Location of the keyring. GCLOUD_KMS_LOCATION')
     .option('-k, --key <key>', 'The key to use for encryption. GCLOUD_KMS_KEY')
@@ -34,8 +36,7 @@ function cryptOptions(cmd) {
   const opts = {}
   const optNames = cmd.options
     .map(op => op.long.replace(/^--/, ''))
-    .filter(optName => optName != 'prefix')
-
+    .filter(optName => !['prefix, env'].includes(optName))
 
   const envPrefix = cmd.prefix || 'GCLOUD_KMS'
 
@@ -67,6 +68,14 @@ function execCrypt(cmd, opts) {
   }
 }
 
+function loadEnv(cmd) {
+  if (cmd.env) {
+    dotenv.config({ path: cmd.env }) 
+  } else {
+    dotenv.config() 
+  }
+}
+
 const GCLOUD_CRYPT_OPTIONS = [
   'location',
   'key',
@@ -78,6 +87,7 @@ const GCLOUD_CRYPT_OPTIONS = [
 
 cryptCommand('encrypt')
 .action(cmd => {
+  loadEnv(cmd)
   const opts = cryptOptions(cmd)
   if (!opts['ciphertext-file'] && opts['plaintext-file']) {
     const ciphertextFileExtension = opts['ciphertext-file-extension'] || 'enc'
@@ -88,6 +98,7 @@ cryptCommand('encrypt')
 
 cryptCommand('decrypt')
 .action(cmd => {
+  loadEnv(cmd)
   const opts = cryptOptions(cmd)  
   if (!opts['plaintext-file'] && opts['ciphertext-file']) {
     const ciphertextFileExtension = opts['ciphertext-file-extension'] || 'enc'
