@@ -1,5 +1,9 @@
 # gcloud-kms-cli
 
+## Requirements
+
+* [gcloud](https://cloud.google.com/sdk/gcloud)
+
 ## Installing
 
 ```bash
