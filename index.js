@@ -85,10 +85,13 @@ const GCLOUD_CRYPT_OPTIONS = [
   'version'
 ]
 
-cryptCommand('encrypt')
-.action(cmd => {
+cryptCommand('encrypt [plaintext-file]')
+.action((plaintextFile, cmd) => {
   loadEnv(cmd)
   const opts = cryptOptions(cmd)
+  if (plaintextFile) {
+    opts['plaintext-file'] = plaintextFile
+  }
   if (!opts['ciphertext-file'] && opts['plaintext-file']) {
     const ciphertextFileExtension = opts['ciphertext-file-extension'] || 'enc'
     opts['ciphertext-file'] = `${opts['plaintext-file']}.${ciphertextFileExtension}`
@@ -96,10 +99,13 @@ cryptCommand('encrypt')
   execCrypt('encrypt', opts)
 })
 
-cryptCommand('decrypt')
-.action(cmd => {
+cryptCommand('decrypt [ciphertext-file]')
+.action((ciphertextFile, cmd) => {
   loadEnv(cmd)
   const opts = cryptOptions(cmd)  
+  if (ciphertextFile) {
+    opts['ciphertext-file'] = ciphertextFile
+  }
   if (!opts['plaintext-file'] && opts['ciphertext-file']) {
     const ciphertextFileExtension = opts['ciphertext-file-extension'] || 'enc'
     const plaintextFile = opts['ciphertext-file'].replace(new RegExp('\.' + ciphertextFileExtension + '$'), '')
