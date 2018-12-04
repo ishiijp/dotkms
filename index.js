@@ -24,7 +24,7 @@ function cryptCommand(command) {
     .option('-v, --version <version>', 'Version to use for encryption. GCLOUD_KMS_VERSION')
     .option('-p, --plaintext-file <file>', 'File path of the plaintext file to encrypt. GCLOUD_KMS_PLAINTEXT_FILE')
     .option('-c, --ciphertext-file <file>', 'File path of the ciphertext file to output. GCLOUD_KMS_CIPHERTEXT_FILE')
-    .option('-e, --ciphertext-file-extension <extension>', 'Extension of the ciphertext file (Default is "enc"). GCLOUD_KMS_CIPHERTEXT_FILE_EXTENSION')
+    .option('-x, --ciphertext-file-extension <extension>', 'Extension of the ciphertext file (Default is "enc"). GCLOUD_KMS_CIPHERTEXT_FILE_EXTENSION')
 }
 
 function cryptOptions(cmd) {
