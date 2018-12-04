@@ -1,0 +1,25 @@
+{
+  "name": "gcloud-kms-cli",
+  "version": "0.0.1",
+  "description": "A tiny CLI tool for Google Cloud KMS",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "lodash.camelcase": "^4.3.0"
+  },
+  "bin": {
+    "gcloud-kms": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ishiijp/gcloud-kms-cli.git"
+  },
+  "keywords": [
+    "kms"
+  ],
+  "author": "Yoshinori Ishii <yoshinori.ishii@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ishiijp/gcloud-kms-cli/issues"
+  },
+  "homepage": "https://github.com/ishiijp/gcloud-kms-cli#readme"
+}
