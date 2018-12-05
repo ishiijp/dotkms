@@ -1,4 +1,6 @@
-# gcloud-kms-cli
+# dotkms
+
+A handy tool for KMS (Key Management System). There is only support for Google Cloud KMS.
 
 ## Requirements
 
