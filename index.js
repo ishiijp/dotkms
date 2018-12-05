@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
-execSync = require('child_process').execSync
+const childProcess = require('child_process')
+const execSync = childProcess.execSync
+const spawnSync = childProcess.spawnSync
+
 try {
   execSync('command -v gcloud')
 } catch(e) {
@@ -31,14 +34,14 @@ function cryptCommand(command) {
     .option('-x, --ciphertext-file-extension <extension>', 'Extension of the ciphertext file (Default is "enc"). KMS_CIPHERTEXT_FILE_EXTENSION')
 }
 
-function cryptOptions(cmd) {
+function kmsOptions(cmd) {
   if (typeof cmd.version === 'function') {
     cmd.version = undefined
   }
   const opts = {}
   const optNames = cmd.options
     .map(op => op.long.replace(/^--/, ''))
-    .filter(optName => !['prefix, env'].includes(optName))
+    .filter(optName => !['prefix', 'env'].includes(optName))
 
   const envPrefix = cmd.prefix || 'KMS'
 
@@ -63,7 +66,8 @@ function execCrypt(cmd, opts) {
     console.info(`Switch project from ${currentProject} to ${opts.project}`)
     execSync(`gcloud config set project ${opts.project}`)
   }
-  console.info(`Executing gcloud command: ${gcloudCommand}`)
+  console.info('Excecuting...')
+  console.info(`${gcloudCommand}`)
   execSync(gcloudCommand)
   if (switchProject) {
     console.info(`Reverse project from ${opts.project} to ${currentProject}`)
@@ -100,7 +104,7 @@ const GCLOUD_CRYPT_OPTIONS = [
 cryptCommand('encrypt [plaintext-file]')
 .action((plaintextFile, cmd) => {
   loadEnv(plaintextFile, cmd)
-  const opts = cryptOptions(cmd)
+  const opts = kmsOptions(cmd)
   if (plaintextFile) {
     opts['plaintext-file'] = plaintextFile
   }
@@ -114,7 +118,7 @@ cryptCommand('encrypt [plaintext-file]')
 cryptCommand('decrypt [ciphertext-file]')
 .action((ciphertextFile, cmd) => {
   loadEnv(ciphertextFile, cmd)
-  const opts = cryptOptions(cmd)  
+  const opts = kmsOptions(cmd)  
   if (ciphertextFile) {
     opts['ciphertext-file'] = ciphertextFile
   }
@@ -127,5 +131,55 @@ cryptCommand('decrypt [ciphertext-file]')
   }
   execCrypt('decrypt', opts)
 })
+
+program
+  .command('create [keyring] [key]')
+  .option('--prefix <prefix>', 'Prefix of environment variables.')
+  .option('-n, --env <file>', 'Path of env file.')
+  .option('-P, --project <project>', 'Google Cloud project to use. KMS_PROJECT')
+  .option('-l, --location <location>', 'Location of the keyring. KMS_LOCATION')
+  .option('-k, --key <key>', 'The key to use for encryption. KMS_KEY')
+  .option('-r, --keyring <keyring>', 'Key ring of the key. KMS_KEYRING')
+  .option('-d, --purpose <purpose>', 'The "purpose" of the key. PURPOSE must be one of: asymmetric-encryption, asymmetric-signing, encryption. KMS_PURPOSE', 'encryption')
+  .option('-b, --labels <key=value>', 'List of label KEY=VALUE pairs to add. KMS_LABELS')
+  .option('-t, --next-rotation-time <time>', 'Next automatic rotation time of the key. KMS_NEXT_ROTATION_TIME')
+  .option('-r, --rotation-period <period>', 'Automatic rotation period of the key. KMS_ROTATION_PERIOD')
+  .action((keyring, key, cmd) => {
+    loadEnv('.', cmd)
+    const opts = kmsOptions(cmd)  
+
+    const currentProject = execSync('gcloud config get-value project').toString().trim()
+    const switchProject = opts.project && opts.project != currentProject
+  
+    if (switchProject) {
+      console.info(`Switch project from ${currentProject} to ${opts.project}`)
+      execSync(`gcloud config set project ${opts.project}`)
+    }
+  
+    const ret = spawnSync('gcloud', ['kms', 'keyrings', 'describe', opts.keyring, '--location', opts.location])
+    if (ret.status == 1) {
+      const stderr = ret.stderr.toString()
+      if (!stderr.match(/NOT_FOUND/)) {
+        throw new Error(stderr)
+      }
+      const keyringCreationCommand = `gcloud kms keyrings create ${opts.keyring} --location ${opts.location}`
+      console.info(`Creating "${opts.keyring}" keyring...`)
+      console.info(keyringCreationCommand)
+      execSync(keyringCreationCommand)
+    }
+
+    const gcloudOptions = ['location', 'keyring', 'purpose', 'labels', 'next-rotation-time', 'rotation-period'].map(optName => {
+      return opts[optName] ? `--${optName} ${opts[optName]}` : ''
+    }).join(' ')
+    const keyCreationCommand = `gcloud kms keys create ${opts.key} ${gcloudOptions}`
+    console.log(`Creating "${opts.key}" key...`)
+    console.log(keyCreationCommand)
+    execSync(keyCreationCommand)
+
+    if (switchProject) {
+      console.info(`Reverse project from ${opts.project} to ${currentProject}`)
+      execSync(`gcloud config set project ${currentProject}`)
+    }
+  }) 
 
 program.parse(process.argv)
