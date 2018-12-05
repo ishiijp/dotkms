@@ -21,14 +21,14 @@ function cryptCommand(command) {
     .command(command)
     .option('--prefix <prefix>', 'Prefix of environment variables.')
     .option('-n, --env <file>', 'Path of env file.')
-    .option('-g, --project <project>', 'Google Cloud project to use. GCLOUD_KMS_PROJECT')
-    .option('-l, --location <location>', 'Location of the keyring. GCLOUD_KMS_LOCATION')
-    .option('-k, --key <key>', 'The key to use for encryption. GCLOUD_KMS_KEY')
-    .option('-r, --keyring <keyring>', 'Key ring of the key. GCLOUD_KMS_KEYRING')
-    .option('-v, --version <version>', 'Version to use for encryption. GCLOUD_KMS_VERSION')
-    .option('-p, --plaintext-file <file>', 'File path of the plaintext file to encrypt. GCLOUD_KMS_PLAINTEXT_FILE')
-    .option('-c, --ciphertext-file <file>', 'File path of the ciphertext file to output. GCLOUD_KMS_CIPHERTEXT_FILE')
-    .option('-x, --ciphertext-file-extension <extension>', 'Extension of the ciphertext file (Default is "enc"). GCLOUD_KMS_CIPHERTEXT_FILE_EXTENSION')
+    .option('-g, --project <project>', 'Google Cloud project to use. KMS_PROJECT')
+    .option('-l, --location <location>', 'Location of the keyring. KMS_LOCATION')
+    .option('-k, --key <key>', 'The key to use for encryption. KMS_KEY')
+    .option('-r, --keyring <keyring>', 'Key ring of the key. KMS_KEYRING')
+    .option('-v, --version <version>', 'Version to use for encryption. KMS_VERSION')
+    .option('-p, --plaintext-file <file>', 'File path of the plaintext file to encrypt. KMS_PLAINTEXT_FILE')
+    .option('-c, --ciphertext-file <file>', 'File path of the ciphertext file to output. KMS_CIPHERTEXT_FILE')
+    .option('-x, --ciphertext-file-extension <extension>', 'Extension of the ciphertext file (Default is "enc"). KMS_CIPHERTEXT_FILE_EXTENSION')
 }
 
 function cryptOptions(cmd) {
@@ -40,7 +40,7 @@ function cryptOptions(cmd) {
     .map(op => op.long.replace(/^--/, ''))
     .filter(optName => !['prefix, env'].includes(optName))
 
-  const envPrefix = cmd.prefix || 'GCLOUD_KMS'
+  const envPrefix = cmd.prefix || 'KMS'
 
   optNames.forEach(optName => {
     const envName = envPrefix + '_' + optName.replace(/-/g, '_').toUpperCase()
