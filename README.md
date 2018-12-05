@@ -2,7 +2,7 @@
 
 A handy tool for KMS (Key Management System). There is only support for Google Cloud KMS.
 
-You can load option values from .kms file as evironment variables, when you encrypt or decrypt a file. 
+You can load option values from .kms file as evironment variables, when you encrypt or decrypt a file. 
 
 ## Requirements
 
@@ -64,7 +64,7 @@ It will generate **mysecret.txt** file.
 
 ## How to load a .kms file
 
-All commands can specify the path of .kms file like:
+All commands can specify the path of .kms file like:
 
 ```bash
 $ dotkms encrypt ./mysecret.txt --env ./somewhere/.kms
