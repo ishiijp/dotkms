@@ -1,7 +1,7 @@
 {
-  "name": "gcloud-kms-cli",
-  "version": "0.0.3",
-  "description": "A tiny CLI tool for Google Cloud KMS",
+  "name": "dotkms",
+  "version": "0.0.4",
+  "description": "A handy tool for KMS (Key Management System)",
   "dependencies": {
     "commander": "^2.19.0",
     "dotenv": "^6.1.0",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ishiijp/gcloud-kms-cli.git"
+    "url": "git+https://github.com/ishiijp/dotkms.git"
   },
   "keywords": [
     "kms"
@@ -20,7 +20,7 @@
   "author": "Yoshinori Ishii <yoshinori.ishii@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ishiijp/gcloud-kms-cli/issues"
+    "url": "https://github.com/ishiijp/dotkms/issues"
   },
-  "homepage": "https://github.com/ishiijp/gcloud-kms-cli#readme"
+  "homepage": "https://github.com/ishiijp/dotkms#readme"
 }
