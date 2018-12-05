@@ -12,6 +12,8 @@ const program = require('commander')
 const pkg = require('./package.json')
 const dotenv = require('dotenv')
 const camelCase = require('lodash.camelcase')
+const path = require('path')
+const fs = require('fs')
 
 program.version(pkg.version, '-v, --version')
 function cryptCommand(command) {
@@ -69,12 +71,21 @@ function execCrypt(cmd, opts) {
   }
 }
 
-function loadEnv(cmd) {
+function loadEnv(targetFile, cmd) {
   if (cmd.env) {
     dotenv.config({ path: cmd.env }) 
-  } else {
-    dotenv.config() 
+    return
+  } else if (targetFile) {
+    const dotKms = path.dirname(path.resolve(targetFile)) + '/.kms'
+    try {
+      fs.accessSync(dotKms)
+      dotenv.config({ path: dotKms }) 
+      return
+    } catch(e) {
+      // thru
+    }
   }
+  dotenv.config({ path: '.kms' })
 }
 
 const GCLOUD_CRYPT_OPTIONS = [
@@ -88,7 +99,7 @@ const GCLOUD_CRYPT_OPTIONS = [
 
 cryptCommand('encrypt [plaintext-file]')
 .action((plaintextFile, cmd) => {
-  loadEnv(cmd)
+  loadEnv(plaintextFile, cmd)
   const opts = cryptOptions(cmd)
   if (plaintextFile) {
     opts['plaintext-file'] = plaintextFile
@@ -102,7 +113,7 @@ cryptCommand('encrypt [plaintext-file]')
 
 cryptCommand('decrypt [ciphertext-file]')
 .action((ciphertextFile, cmd) => {
-  loadEnv(cmd)
+  loadEnv(ciphertextFile, cmd)
   const opts = cryptOptions(cmd)  
   if (ciphertextFile) {
     opts['ciphertext-file'] = ciphertextFile
