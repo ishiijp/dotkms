@@ -9,13 +9,13 @@ A handy tool for KMS (Key Management System). There is only support for Google C
 ## Installing
 
 ```bash
-$ npm install gcloud-kms-cli
+$ npm install dotkms
 ```
 
 or 
 
 ```bash
-$ yarn add gcloud-kms-cli
+$ yarn add dotkms
 ```
 
 ## Usage
@@ -23,12 +23,10 @@ $ yarn add gcloud-kms-cli
 Please see the help
 
 ```bash
-$ gcloud-kms --help
-$ gcloud-kms encrypt --help
-$ gcloud-kms decrypt --help
+$ dotkms --help
+$ dotkms encrypt --help
+$ dotkms decrypt --help
 ```
-
-This will load the variables from the .env file in the current working directory and then run the command (using the new set of environment variables)
 
 ## License
 
