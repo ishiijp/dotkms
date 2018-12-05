@@ -61,6 +61,7 @@ function execCrypt(cmd, opts) {
     console.info(`Switch project from ${currentProject} to ${opts.project}`)
     execSync(`gcloud config set project ${opts.project}`)
   }
+  console.info(`Executing gcloud command: ${gcloudCommand}`)
   execSync(gcloudCommand)
   if (switchProject) {
     console.info(`Reverse project from ${opts.project} to ${currentProject}`)
