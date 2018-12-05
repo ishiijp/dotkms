@@ -21,7 +21,7 @@ function cryptCommand(command) {
     .command(command)
     .option('--prefix <prefix>', 'Prefix of environment variables.')
     .option('-n, --env <file>', 'Path of env file.')
-    .option('-g, --project <project>', 'Google Cloud project to use. KMS_PROJECT')
+    .option('-P, --project <project>', 'Google Cloud project to use. KMS_PROJECT')
     .option('-l, --location <location>', 'Location of the keyring. KMS_LOCATION')
     .option('-k, --key <key>', 'The key to use for encryption. KMS_KEY')
     .option('-r, --keyring <keyring>', 'Key ring of the key. KMS_KEYRING')
