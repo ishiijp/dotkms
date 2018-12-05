@@ -1,6 +1,6 @@
 {
   "name": "dotkms",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A handy tool for KMS (Key Management System)",
   "dependencies": {
     "commander": "^2.19.0",
